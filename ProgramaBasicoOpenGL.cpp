@@ -12,6 +12,9 @@
 #include <cmath>
 #include <ctime>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 using namespace std;
 
 #ifdef WIN32
@@ -37,8 +40,13 @@ bool devoTestar = true;
 bool devoExibir = true;
 bool devoImprimirFPS = false;
 
+int numDIVS = 10;
+
 Linha Linhas[MAX];
 Linha Veiculo;
+
+Linha divs[50];//guarda o posicionamento das lihas divisórias
+float coordveiculo[4]; //guardar as coordenadas do veículo
 
 float tx, ty, alfa;
 void PrintMenu()
@@ -96,13 +104,39 @@ void InstanciaPonto(Ponto p, Ponto &out)
     //imprimeMatrizGL();
 
 }
+
+// **********************************************************************
+//      Organiza o cenário em subdivisoes do mesmo
+//
+// **********************************************************************
+void SubDivide(int n){//recebe o número de subdivisoes escolhidas
+    float tamdv = 10/n;//tamaho de cada subdivisao
+    //printf("oi %f",tamdv);//ok
+    float x = 0;//representa o x do universo lógico
+    for(int i = 0; i<n;i++){ //cria as linhas divisórias
+        //inicio da linha
+        divs[i].x1 = x;
+        divs[i].y1 = -10;
+        //fim da linha
+        divs[i].x2 = x;
+        divs[i].y2 = 10;
+
+        x = x + tamdv;
+    }
+}
+
 // **********************************************************************
 //
 //
 // **********************************************************************
 void GuardaCoodenadasDoVeiculo()
 {
-
+    coordveiculo[0] = Veiculo.x1;
+    coordveiculo[1] = Veiculo.y1;
+    coordveiculo[2] = Veiculo.x2;
+    coordveiculo[3] = Veiculo.y2;
+    printf("veiculo: %f",Veiculo.x1);
+    printf("coordveiculo: %f \n",coordveiculo[0]);
 }
 // **********************************************************************
 //  void init(void)
@@ -111,7 +145,7 @@ void GuardaCoodenadasDoVeiculo()
 // **********************************************************************
 void init(void)
 {
-    // Define a cor do fundo da tela (AZUL)
+    // Define a cor do fundo da tela (BRANCO)
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     srand(unsigned(time(NULL)));
@@ -128,6 +162,9 @@ void init(void)
     tx = 5;
     ty = 5;
     alfa = 0.0;
+
+    //subdivide o espaço
+    SubDivide(numDIVS);
 
 }
 
@@ -197,6 +234,14 @@ void Redesenha(int i)
 }
 void DesenhaCenario()
 {
+
+    //desenha linhas subdivisórias
+    for(int i = 0; i<numDIVS;i++){
+        glColor3f(0,0,1);
+        glLineWidth(1);
+        divs[i].desenhaLinha();
+    }
+
     Ponto P1, P2, PA, PB, temp;
     // Calcula e armazena as coordenadas da linha que representa o "veículo"
     glPushMatrix();
@@ -207,6 +252,7 @@ void DesenhaCenario()
         temp.set(Veiculo.x1, Veiculo.y1);
         InstanciaPonto(temp, P1);
         temp.set(Veiculo.x2, Veiculo.y2);
+        //GuardaCoodenadasDoVeiculo();
         InstanciaPonto(temp, P2);
     }
     glPopMatrix();
@@ -242,7 +288,6 @@ void DesenhaCenario()
         Veiculo.desenhaLinha();
     }
     glPopMatrix();
-
 }
 // **********************************************************************
 //  void display( void )
