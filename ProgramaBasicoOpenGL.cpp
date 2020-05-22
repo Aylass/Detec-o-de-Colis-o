@@ -35,17 +35,27 @@ using namespace std;
 #include "Ponto.h"
 #include "Linha.h"
 
-const int MAX = 300;
+const int MAX = 300;//máximo de linhas verdes
 bool devoTestar = true;
 bool devoExibir = true;
 bool devoImprimirFPS = false;
 
-int numDIVS = 10;
+int numDIVS = 4;
+int numDIVSVERTICAL = 2;
 
 Linha Linhas[MAX];
 Linha Veiculo;
 
+typedef struct{
+    float inicio;//guarda o x inicial
+    float fim;//guarda o x final
+    float alturainicio;
+    float alturafim;
+    int veiculo;//0 se o veiculo não estiver    1 se o veiculo estiver
+}Divisoes;
+
 Linha divs[50];//guarda o posicionamento das lihas divisórias
+Divisoes divisoes[50];
 float coordveiculo[4]; //guardar as coordenadas do veículo
 
 float tx, ty, alfa;
@@ -109,19 +119,81 @@ void InstanciaPonto(Ponto p, Ponto &out)
 //      Organiza o cenário em subdivisoes do mesmo
 //
 // **********************************************************************
-void SubDivide(int n){//recebe o número de subdivisoes escolhidas
-    float tamdv = 10/n;//tamaho de cada subdivisao
+void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na horizontal e na vertical
+    float tamdv = 10/n;//tamaho de cada subdivisao em x
     //printf("oi %f",tamdv);//ok
     float x = 0;//representa o x do universo lógico
-    for(int i = 0; i<n;i++){ //cria as linhas divisórias
+    float y = 0;//representa o y do universo lógico
+    int i;
+    for(i = 0; i<n;i++){ //cria as linhas divisórias em x
         //inicio da linha
         divs[i].x1 = x;
-        divs[i].y1 = -10;
+        divs[i].y1 = 0;
         //fim da linha
         divs[i].x2 = x;
         divs[i].y2 = 10;
 
         x = x + tamdv;
+        printf("Linha X %d: %f\n",i,divs[i].x1);
+    }
+    float tamdvy = 10/ny;//tamaho de cada subdivisao em y
+    //printf("%f",tamdvy);//ok
+    for(int p = 0; p<ny;p++){ //cria as linhas divisórias em y
+        //inicio da linha
+        divs[i+p].x1 = 0;
+        divs[i+p].y1 = y;
+        //fim da linha
+        divs[i+p].x2 = 10;
+        divs[i+p].y2 = y;
+        //printf("%f",y);//ok
+        y = y + tamdvy;
+        printf("Linha Y %d: %f\n",i,divs[i+p].y1);
+    }
+    //cria as divisões
+    int aux = 0;
+    /*divisoes[aux].inicio = divs[0].x1;
+    divisoes[aux].fim = divs[1].x1;
+    divisoes[aux].veiculo = 0;
+    divisoes[aux].alturainicio = 0;
+    divisoes[aux].alturafim = 0;*/
+  /*  for(int p = 1; p<n;p++){
+        aux++;
+        divisoes[aux].inicio = divs[p].x1;
+        divisoes[aux].fim = divs[p+1].x1;
+        divisoes[aux].veiculo = 0;
+        divisoes[aux].altura = divs[p+i+1].y1;
+    }
+    aux++;
+    divisoes[aux].inicio = divs[n].x1;
+    divisoes[aux].fim = 10;//nao recebe esse valor
+    divisoes[aux].veiculo = 0;
+    divisoes[aux].altura = divs[ny+n].y1;
+*/
+        y = 0;
+        for(int yy = 0; yy<ny;yy++){
+            divisoes[aux].inicio = divs[0].x1;
+            divisoes[aux].fim = divs[1].x1;
+            divisoes[aux].veiculo = 0;
+            divisoes[aux].alturainicio = y;
+            divisoes[aux].alturafim = y+tamdvy;
+            for(int xx = 1; xx<n;xx++){
+                aux++;
+                divisoes[aux].inicio = divs[xx].x1;
+                divisoes[aux].fim = divs[xx+1].x1;
+                divisoes[aux].veiculo = 0;
+                divisoes[aux].alturainicio = y;
+                divisoes[aux].alturafim = y+tamdvy;
+            }
+            divisoes[aux].fim = 10;
+            aux++;
+            y = y + tamdvy;
+        }
+
+    for(int i = 0; i<(n*ny);i++){
+        printf("Inicia: %f",divisoes[i].inicio);
+        printf("   AlturaInicio: %f",divisoes[i].alturainicio);
+        printf("   AlturaFim: %f",divisoes[i].alturafim);
+        printf("   Termina: %f \n",divisoes[i].fim);
     }
 }
 
@@ -131,12 +203,13 @@ void SubDivide(int n){//recebe o número de subdivisoes escolhidas
 // **********************************************************************
 void GuardaCoodenadasDoVeiculo()
 {
-    coordveiculo[0] = Veiculo.x1;
-    coordveiculo[1] = Veiculo.y1;
-    coordveiculo[2] = Veiculo.x2;
-    coordveiculo[3] = Veiculo.y2;
-    printf("veiculo: %f",Veiculo.x1);
-    printf("coordveiculo: %f \n",coordveiculo[0]);
+    coordveiculo[0] = tx;//Veiculo.x1;
+    coordveiculo[1] = ty;//Veiculo.y1;
+    coordveiculo[2] = tx;//Veiculo.x2;
+    coordveiculo[3] = ty + 10;//Veiculo.y2;
+    //printf("veiculo: %f",Veiculo.x2);
+    //printf("coordveiculo X: %f \n",coordveiculo[0]);//ok
+    //printf("coordveiculo Y: %f \n",coordveiculo[3]);
 }
 // **********************************************************************
 //  void init(void)
@@ -164,7 +237,7 @@ void init(void)
     alfa = 0.0;
 
     //subdivide o espaço
-    SubDivide(numDIVS);
+    SubDivide(numDIVS,numDIVSVERTICAL);
 
 }
 
@@ -234,13 +307,22 @@ void Redesenha(int i)
 }
 void DesenhaCenario()
 {
-
-    //desenha linhas subdivisórias
-    for(int i = 0; i<numDIVS;i++){
+    GuardaCoodenadasDoVeiculo();
+    //desenha linhas subdivisórias em X
+    int p;
+    for(p = 0; p<numDIVS;p++){
         glColor3f(0,0,1);
         glLineWidth(1);
-        divs[i].desenhaLinha();
+        divs[p].desenhaLinha();
     }
+
+    //desenha linhas subdivisórias em Y
+    for(int i = 0; i<numDIVSVERTICAL;i++){
+        glColor3f(0,0,1);
+        glLineWidth(1);
+        divs[i+p].desenhaLinha();
+    }
+
 
     Ponto P1, P2, PA, PB, temp;
     // Calcula e armazena as coordenadas da linha que representa o "veículo"
@@ -261,6 +343,7 @@ void DesenhaCenario()
     glLineWidth(1);
     glColor3f(1,1,0);
 
+    //Lógica força Bruta
     for(int i=0; i<MAX; i++)
     {
         if (devoTestar)   // Esta variável é controlada pela "tecla de espaço"
@@ -277,6 +360,26 @@ void DesenhaCenario()
         if (devoExibir) // Esta variável é controlada pela 'e'
             Linhas[i].desenhaLinha();
     }
+    //printf("tx%f    ",tx);//ok
+
+    //Lógica Sub Divisões
+
+    //se o veículo se mexeu
+    //qual ou quais div ele ta
+
+    //printf("Veiculo se encontra: %d",divisoes[0].veiculo);//ok
+    for(int p=0;p<numDIVS;p++){//para cada subdivisão
+        if(((coordveiculo[0]>=divisoes[p].inicio)&&(coordveiculo[0]<divisoes[p].fim)) || ((coordveiculo[2]>=divisoes[p].inicio)&&(coordveiculo[2]<divisoes[p].fim))){
+            divisoes[p].veiculo = 1;
+            //printf("Veiculo se encontra em %d",p);//ok
+        }else{
+            divisoes[p].veiculo = 0;
+        }
+        if(divisoes[p].veiculo == 1){
+
+        }
+    }
+
 
     // Desenha o veículo de novo
     glColor3f(1,0,1);
@@ -357,6 +460,14 @@ void keyboard ( unsigned char key, int x, int y )
     case 'f':
         devoImprimirFPS = true;
         cout << "Comecou a contar..." << endl;
+        break;
+    case 'p':
+        for(int p=0;p<numDIVS;p++){//para cada subdivisão
+            if(divisoes[p].veiculo==1){
+                printf("Veiculo se encontra em %d, %f",p,divisoes[p].inicio);//ok
+            }
+        }
+        printf("\n");
         break;
     default:
         break;
