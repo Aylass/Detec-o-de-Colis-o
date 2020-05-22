@@ -151,25 +151,7 @@ void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na ho
     }
     //cria as divisões
     int aux = 0;
-    /*divisoes[aux].inicio = divs[0].x1;
-    divisoes[aux].fim = divs[1].x1;
-    divisoes[aux].veiculo = 0;
-    divisoes[aux].alturainicio = 0;
-    divisoes[aux].alturafim = 0;*/
-  /*  for(int p = 1; p<n;p++){
-        aux++;
-        divisoes[aux].inicio = divs[p].x1;
-        divisoes[aux].fim = divs[p+1].x1;
-        divisoes[aux].veiculo = 0;
-        divisoes[aux].altura = divs[p+i+1].y1;
-    }
-    aux++;
-    divisoes[aux].inicio = divs[n].x1;
-    divisoes[aux].fim = 10;//nao recebe esse valor
-    divisoes[aux].veiculo = 0;
-    divisoes[aux].altura = divs[ny+n].y1;
-*/
-        y = 0;
+     y = 0;
         for(int yy = 0; yy<ny;yy++){
             divisoes[aux].inicio = divs[0].x1;
             divisoes[aux].fim = divs[1].x1;
@@ -368,10 +350,12 @@ void DesenhaCenario()
     //qual ou quais div ele ta
 
     //printf("Veiculo se encontra: %d",divisoes[0].veiculo);//ok
-    for(int p=0;p<numDIVS;p++){//para cada subdivisão
-        if(((coordveiculo[0]>=divisoes[p].inicio)&&(coordveiculo[0]<divisoes[p].fim)) || ((coordveiculo[2]>=divisoes[p].inicio)&&(coordveiculo[2]<divisoes[p].fim))){
-            divisoes[p].veiculo = 1;
-            //printf("Veiculo se encontra em %d",p);//ok
+    for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
+        if(((coordveiculo[0]>=divisoes[p].inicio)&&(coordveiculo[0]<divisoes[p].fim)) || ((coordveiculo[2]>=divisoes[p].inicio)&&(coordveiculo[2]<divisoes[p].fim))){ //define qual horizontal o veículo esta
+            if(((coordveiculo[1]>=divisoes[p].alturainicio)&&(coordveiculo[1]<divisoes[p].alturafim)) || ((coordveiculo[3]>=divisoes[p].alturainicio)&&(coordveiculo[3]<divisoes[p].alturafim))){ //define qual vertical o veículo esta
+                divisoes[p].veiculo = 1;
+                //printf("Veiculo se encontra em %d",p);//ok
+            }
         }else{
             divisoes[p].veiculo = 0;
         }
@@ -462,7 +446,7 @@ void keyboard ( unsigned char key, int x, int y )
         cout << "Comecou a contar..." << endl;
         break;
     case 'p':
-        for(int p=0;p<numDIVS;p++){//para cada subdivisão
+        for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
             if(divisoes[p].veiculo==1){
                 printf("Veiculo se encontra em %d, %f",p,divisoes[p].inicio);//ok
             }
