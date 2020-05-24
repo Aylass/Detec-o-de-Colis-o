@@ -40,8 +40,8 @@ bool devoTestar = true;
 bool devoExibir = true;
 bool devoImprimirFPS = false;
 
-int numDIVS = 4;
-int numDIVSVERTICAL = 2;
+float numDIVS = 4;
+float numDIVSVERTICAL = 2;
 
 Linha Linhas[MAX];
 Linha Veiculo;
@@ -121,7 +121,7 @@ void InstanciaPonto(Ponto p, Ponto &out)
 // **********************************************************************
 void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na horizontal e na vertical
     float tamdv = 10/n;//tamaho de cada subdivisao em x
-    //printf("oi %f",tamdv);//ok
+    printf("oi %f",tamdv);//ok
     float x = 0;//representa o x do universo lógico
     float y = 0;//representa o y do universo lógico
     int i;
@@ -137,7 +137,7 @@ void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na ho
         printf("Linha X %d: %f\n",i,divs[i].x1);
     }
     float tamdvy = 10/ny;//tamaho de cada subdivisao em y
-    //printf("%f",tamdvy);//ok
+    printf("%f",tamdvy);//ok
     for(int p = 0; p<ny;p++){ //cria as linhas divisórias em y
         //inicio da linha
         divs[i+p].x1 = 0;
@@ -183,16 +183,7 @@ void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na ho
 //
 //
 // **********************************************************************
-void GuardaCoodenadasDoVeiculo()
-{
-    coordveiculo[0] = tx;//Veiculo.x1;
-    coordveiculo[1] = ty;//Veiculo.y1;
-    coordveiculo[2] = tx;//Veiculo.x2;
-    coordveiculo[3] = ty + 10;//Veiculo.y2;
-    //printf("veiculo: %f",Veiculo.x2);
-    //printf("coordveiculo X: %f \n",coordveiculo[0]);//ok
-    //printf("coordveiculo Y: %f \n",coordveiculo[3]);
-}
+
 // **********************************************************************
 //  void init(void)
 //  Inicializa os parâmetros globais de OpenGL
@@ -289,7 +280,6 @@ void Redesenha(int i)
 }
 void DesenhaCenario()
 {
-    GuardaCoodenadasDoVeiculo();
     //desenha linhas subdivisórias em X
     int p;
     for(p = 0; p<numDIVS;p++){
@@ -318,6 +308,10 @@ void DesenhaCenario()
         temp.set(Veiculo.x2, Veiculo.y2);
         //GuardaCoodenadasDoVeiculo();
         InstanciaPonto(temp, P2);
+        coordveiculo[0] = P1.x;
+         coordveiculo[1] = P1.y;
+          coordveiculo[2] = P2.x;
+           coordveiculo[3] = P2.y;
     }
     glPopMatrix();
 
@@ -328,6 +322,8 @@ void DesenhaCenario()
     //Lógica força Bruta
     for(int i=0; i<MAX; i++)
     {
+       // if((Linhas[i].x1>=divisoes[p].inicio)&&(Linhas[i].x1<divisoes[p].fim))
+
         if (devoTestar)   // Esta variável é controlada pela "tecla de espaço"
         {
             temp.set(Linhas[i].x1, Linhas[i].y1);
@@ -355,6 +351,8 @@ void DesenhaCenario()
             if(((coordveiculo[1]>=divisoes[p].alturainicio)&&(coordveiculo[1]<divisoes[p].alturafim)) || ((coordveiculo[3]>=divisoes[p].alturainicio)&&(coordveiculo[3]<divisoes[p].alturafim))){ //define qual vertical o veículo esta
                 divisoes[p].veiculo = 1;
                 //printf("Veiculo se encontra em %d",p);//ok
+            }else{
+                divisoes[p].veiculo = 0;
             }
         }else{
             divisoes[p].veiculo = 0;
