@@ -40,8 +40,8 @@ bool devoTestar = true;
 bool devoExibir = true;
 bool devoImprimirFPS = false;
 
-float numDIVS = 10;
-float numDIVSVERTICAL = 13;
+float numDIVS = 4; // 10
+float numDIVSVERTICAL = 2; // 13
 
 Linha Linhas[MAX];
 Linha Veiculo;
@@ -320,24 +320,24 @@ void DesenhaCenario()
     glColor3f(1,1,0);
 
     //Lógica força Bruta
-    for(int i=0; i<MAX; i++)
-    {
+   // for(int i=0; i<MAX; i++)
+   // {
        // if((Linhas[i].x1>=divisoes[p].inicio)&&(Linhas[i].x1<divisoes[p].fim))
 
-        if (devoTestar)   // Esta variável é controlada pela "tecla de espaço"
-        {
-            temp.set(Linhas[i].x1, Linhas[i].y1);
-            InstanciaPonto(temp, PA);
-            temp.set(Linhas[i].x2, Linhas[i].y2);
-            InstanciaPonto(temp, PB);
-            if (HaInterseccao(PA, PB, P1, P2))
-                glColor3f(1,0,0);
-            else glColor3f(0,1,0);
-        }
-        else glColor3f(0,1,0);
-        if (devoExibir) // Esta variável é controlada pela 'e'
-            Linhas[i].desenhaLinha();
-    }
+      //  if (devoTestar)   // Esta variável é controlada pela "tecla de espaço"
+      //  {
+         //   temp.set(Linhas[i].x1, Linhas[i].y1);
+        //    InstanciaPonto(temp, PA);
+        //    temp.set(Linhas[i].x2, Linhas[i].y2);
+       //     InstanciaPonto(temp, PB);
+       //     if (HaInterseccao(PA, PB, P1, P2))
+          //      glColor3f(1,0,0);
+       //     else glColor3f(0,1,0);
+      //  }
+     //   else glColor3f(0,1,0);
+      //  if (devoExibir) // Esta variável é controlada pela 'e'
+     //       Linhas[i].desenhaLinha();
+  //  }
     //printf("tx%f    ",tx);//ok
 
     //Lógica Sub Divisões
@@ -346,6 +346,7 @@ void DesenhaCenario()
     //qual ou quais div ele ta
 
     //printf("Veiculo se encontra: %d",divisoes[0].veiculo);//ok
+
     for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
         if(((coordveiculo[0]>=divisoes[p].inicio)&&(coordveiculo[0]<divisoes[p].fim)) || ((coordveiculo[2]>=divisoes[p].inicio)&&(coordveiculo[2]<divisoes[p].fim))){ //define qual horizontal o veículo esta
             if(((coordveiculo[1]>=divisoes[p].alturainicio)&&(coordveiculo[1]<divisoes[p].alturafim)) || ((coordveiculo[3]>=divisoes[p].alturainicio)&&(coordveiculo[3]<divisoes[p].alturafim))){ //define qual vertical o veículo esta
@@ -358,7 +359,26 @@ void DesenhaCenario()
             divisoes[p].veiculo = 0;
         }
         if(divisoes[p].veiculo == 1){
+            for(int i=0; i<MAX; i++) {
 
+                if (((Linhas[i].x1>=divisoes[p].inicio)&&(Linhas[i].x1<divisoes[p].fim)) || ((Linhas[i].x2>=divisoes[p].inicio)&&(Linhas[i].x2<divisoes[p].fim)) ) {
+                    if (((Linhas[i].y1>=divisoes[p].alturainicio)&&(Linhas[i].y1<divisoes[p].alturafim)) || ((Linhas[i].y2>=divisoes[p].alturainicio)&&(Linhas[i].y2<divisoes[p].alturafim))) {
+                        temp.set(Linhas[i].x1, Linhas[i].y1);
+                        InstanciaPonto(temp, PA);
+                        temp.set(Linhas[i].x2, Linhas[i].y2);
+                        InstanciaPonto(temp, PB);
+                        if (HaInterseccao(PA, PB, P1, P2))
+                            glColor3f(1,0,0);
+                        else glColor3f(0,1,0);
+                    }
+                     else glColor3f(0,1,0);
+                     if (devoExibir) // Esta variável é controlada pela 'e'
+                        Linhas[i].desenhaLinha();
+                }
+                else glColor3f(0,1,0);
+                if (devoExibir) // Esta variável é controlada pela 'e'
+                    Linhas[i].desenhaLinha();
+            }
         }
     }
 
