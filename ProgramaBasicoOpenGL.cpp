@@ -40,7 +40,8 @@ bool devoTestar = true;
 bool devoExibir = true;
 bool devoImprimirFPS = false;
 
-float numDIVS = 4; // 10
+float numDIVS = 5; // 10
+
 float numDIVSVERTICAL = 2; // 13
 
 Linha Linhas[MAX];
@@ -134,7 +135,7 @@ void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na ho
         divs[i].y2 = 10;
 
         x = x + tamdv;
-        printf("Linha X %d: %f\n",i,divs[i].x1);
+        //printf("Linha X %d: %f\n",i,divs[i].x1);
     }
     float tamdvy = 10.0/ny;//tamaho de cada subdivisao em y
     printf("%f",tamdvy);//ok
@@ -147,7 +148,7 @@ void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na ho
         divs[i+p].y2 = y;
         //printf("%f",y);//ok
         y = y + tamdvy;
-        printf("Linha Y %d: %f\n",i,divs[i+p].y1);
+       // printf("Linha Y %d: %f\n",i,divs[i+p].y1);
     }
     //cria as divisões
     int aux = 0;
@@ -171,12 +172,12 @@ void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na ho
             y = y + tamdvy;
         }
 
-    for(int i = 0; i<(n*ny);i++){
+    /*for(int i = 0; i<(n*ny);i++){
         printf("Inicia: %f",divisoes[i].inicio);
         printf("   AlturaInicio: %f",divisoes[i].alturainicio);
         printf("   AlturaFim: %f",divisoes[i].alturafim);
         printf("   Termina: %f \n",divisoes[i].fim);
-    }
+    }*/
 }
 
 // **********************************************************************
@@ -358,30 +359,30 @@ void DesenhaCenario()
         }else{
             divisoes[p].veiculo = 0;
         }
-        if(divisoes[p].veiculo == 1){
-            for(int i=0; i<MAX; i++) {
+    }
 
-                if (((Linhas[i].x1>=divisoes[p].inicio)&&(Linhas[i].x1<divisoes[p].fim)) || ((Linhas[i].x2>=divisoes[p].inicio)&&(Linhas[i].x2<divisoes[p].fim)) ) {
+    for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
+        if(divisoes[p].veiculo == 1){
+            for(int i=0; i<MAX; i++) {//para cada linha
+                 if (((Linhas[i].x1>=divisoes[p].inicio)&&(Linhas[i].x1<divisoes[p].fim)) || ((Linhas[i].x2>=divisoes[p].inicio)&&(Linhas[i].x2<divisoes[p].fim)) ) {
                     if (((Linhas[i].y1>=divisoes[p].alturainicio)&&(Linhas[i].y1<divisoes[p].alturafim)) || ((Linhas[i].y2>=divisoes[p].alturainicio)&&(Linhas[i].y2<divisoes[p].alturafim))) {
-                        temp.set(Linhas[i].x1, Linhas[i].y1);
-                        InstanciaPonto(temp, PA);
-                        temp.set(Linhas[i].x2, Linhas[i].y2);
-                        InstanciaPonto(temp, PB);
-                        if (HaInterseccao(PA, PB, P1, P2))
-                            glColor3f(1,0,0);
-                        else glColor3f(0,1,0);
-                    }
-                     else glColor3f(0,1,0);
-                     if (devoExibir) // Esta variável é controlada pela 'e'
-                        Linhas[i].desenhaLinha();
-                }
-                else glColor3f(0,1,0);
+                            if (devoTestar)   // Esta variável é controlada pela "tecla de espaço"
+                            {
+                                temp.set(Linhas[i].x1, Linhas[i].y1);
+                                InstanciaPonto(temp, PA);
+                                temp.set(Linhas[i].x2, Linhas[i].y2);
+                                InstanciaPonto(temp, PB);
+                                if (HaInterseccao(PA, PB, P1, P2))
+                                glColor3f(1,0,0);
+                                else glColor3f(0,1,0);
+                            }  else glColor3f(0,1,0);
+                    }else glColor3f(0,1,0);
+                 }else glColor3f(0,1,0);
                 if (devoExibir) // Esta variável é controlada pela 'e'
                     Linhas[i].desenhaLinha();
             }
         }
     }
-
 
     // Desenha o veículo de novo
     glColor3f(1,0,1);
@@ -464,12 +465,12 @@ void keyboard ( unsigned char key, int x, int y )
         cout << "Comecou a contar..." << endl;
         break;
     case 'p':
-        for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
+        /*for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
             if(divisoes[p].veiculo==1){
                 printf("Veiculo se encontra em %d, %f",p,divisoes[p].inicio);//ok
             }
         }
-        printf("\n");
+        printf("\n");*/
         break;
     default:
         break;
