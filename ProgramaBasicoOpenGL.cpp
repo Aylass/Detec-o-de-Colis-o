@@ -361,6 +361,19 @@ void DesenhaCenario()
         }
     }
 
+    for(int i=0; i<MAX; i++){
+        if (devoTestar)   // Esta variável é controlada pela "tecla de espaço"
+        {
+            temp.set(Linhas[i].x1, Linhas[i].y1);
+            InstanciaPonto(temp, PA);
+            temp.set(Linhas[i].x2, Linhas[i].y2);
+            InstanciaPonto(temp, PB);
+            glColor3f(0,1,0);
+        }
+        if (devoExibir) // Esta variável é controlada pela 'e'
+           Linhas[i].desenhaLinha();
+    }
+
     for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
         if(divisoes[p].veiculo == 1){
             for(int i=0; i<MAX; i++) {//para cada linha
