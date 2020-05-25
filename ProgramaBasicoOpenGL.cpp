@@ -40,8 +40,8 @@ bool devoTestar = true;
 bool devoExibir = true;
 bool devoImprimirFPS = false;
 
-float numDIVS = 4;
-float numDIVSVERTICAL = 2;
+float numDIVS = 10;
+float numDIVSVERTICAL = 13;
 
 Linha Linhas[MAX];
 Linha Veiculo;
@@ -120,7 +120,7 @@ void InstanciaPonto(Ponto p, Ponto &out)
 //
 // **********************************************************************
 void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na horizontal e na vertical
-    float tamdv = 10/n;//tamaho de cada subdivisao em x
+    float tamdv = 10.0/n;//tamaho de cada subdivisao em x
     printf("oi %f",tamdv);//ok
     float x = 0;//representa o x do universo lógico
     float y = 0;//representa o y do universo lógico
@@ -136,7 +136,7 @@ void SubDivide(int n, int ny){//recebe o número de subdivisoes escolhidas na ho
         x = x + tamdv;
         printf("Linha X %d: %f\n",i,divs[i].x1);
     }
-    float tamdvy = 10/ny;//tamaho de cada subdivisao em y
+    float tamdvy = 10.0/ny;//tamaho de cada subdivisao em y
     printf("%f",tamdvy);//ok
     for(int p = 0; p<ny;p++){ //cria as linhas divisórias em y
         //inicio da linha
