@@ -366,6 +366,7 @@ void DesenhaCenario()
             for(int i=0; i<MAX; i++) {//para cada linha
                  if (((Linhas[i].x1>=divisoes[p].inicio)&&(Linhas[i].x1<divisoes[p].fim)) || ((Linhas[i].x2>=divisoes[p].inicio)&&(Linhas[i].x2<divisoes[p].fim)) ) {
                     if (((Linhas[i].y1>=divisoes[p].alturainicio)&&(Linhas[i].y1<divisoes[p].alturafim)) || ((Linhas[i].y2>=divisoes[p].alturainicio)&&(Linhas[i].y2<divisoes[p].alturafim))) {
+                             //ta na divisao
                             if (devoTestar)   // Esta variável é controlada pela "tecla de espaço"
                             {
                                 temp.set(Linhas[i].x1, Linhas[i].y1);
@@ -373,13 +374,13 @@ void DesenhaCenario()
                                 temp.set(Linhas[i].x2, Linhas[i].y2);
                                 InstanciaPonto(temp, PB);
                                 if (HaInterseccao(PA, PB, P1, P2))
-                                glColor3f(1,0,0);
+                                    glColor3f(1,0,0);
                                 else glColor3f(0,1,0);
                             }  else glColor3f(0,1,0);
-                    }else glColor3f(0,1,0);
-                 }else glColor3f(0,1,0);
-                if (devoExibir) // Esta variável é controlada pela 'e'
-                    Linhas[i].desenhaLinha();
+                            if (devoExibir) // Esta variável é controlada pela 'e'
+                                Linhas[i].desenhaLinha();
+                    }else glColor3f(0,1,0);//nao ta na divisao
+                 }else glColor3f(0,1,0);//nao ta na divisao
             }
         }
     }
