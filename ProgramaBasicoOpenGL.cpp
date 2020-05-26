@@ -40,7 +40,7 @@ bool devoTestar = true;
 bool devoExibir = true;
 bool devoImprimirFPS = false;
 
-float numDIVS = 5; // 10
+float numDIVS = 20; // 10
 
 float numDIVSVERTICAL = 2; // 13
 
@@ -56,7 +56,7 @@ typedef struct{
 }Divisoes;
 
 Linha divs[50];//guarda o posicionamento das lihas divisórias
-Divisoes divisoes[50];
+Divisoes divisoes[100];
 float coordveiculo[4]; //guardar as coordenadas do veículo
 
 float tx, ty, alfa;
@@ -349,8 +349,8 @@ void DesenhaCenario()
     //printf("Veiculo se encontra: %d",divisoes[0].veiculo);//ok
 
     for(int p = 0; p<(numDIVS*numDIVSVERTICAL);p++){//para cada divisao
-        if(((coordveiculo[0]>=divisoes[p].inicio)&&(coordveiculo[0]<divisoes[p].fim)) || ((coordveiculo[2]>=divisoes[p].inicio)&&(coordveiculo[2]<divisoes[p].fim))){ //define qual horizontal o veículo esta
-            if(((coordveiculo[1]>=divisoes[p].alturainicio)&&(coordveiculo[1]<divisoes[p].alturafim)) || ((coordveiculo[3]>=divisoes[p].alturainicio)&&(coordveiculo[3]<divisoes[p].alturafim))){ //define qual vertical o veículo esta
+        if(((coordveiculo[0]>=divisoes[p].inicio)&&(coordveiculo[0]<=divisoes[p].fim)) || ((coordveiculo[2]>=divisoes[p].inicio)&&(coordveiculo[2]<=divisoes[p].fim))){ //define qual horizontal o veículo esta
+            if(((coordveiculo[1]>=divisoes[p].alturainicio)&&(coordveiculo[1]<=divisoes[p].alturafim)) || ((coordveiculo[3]>=divisoes[p].alturainicio)&&(coordveiculo[3]<=divisoes[p].alturafim))){ //define qual vertical o veículo esta
                 divisoes[p].veiculo = 1;
                 //printf("Veiculo se encontra em %d",p);//ok
             }else{
